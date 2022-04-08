@@ -1,17 +1,22 @@
 #include <AccelStepper.h>
 char command;
-long acceleration;
+long inAcceleration;
+long inMaxSpeed
+long inDistance
 
-
+// Initialize pins for microstepping
 const int ms1 = 5;
 const int ms2 = 18;
 const int ms3 = 19;
 
-bool newData = false;
+// Flags
+bool newData = false;      
 bool runAllowed = false;
 
 // Define a stepper and the pins it will use
-AccelStepper stepper(1, 2, 4); // Defaults to AccelStepper::FULL4WIRE (4 pins) on 2, 3, 4, 5
+AccelStepper stepper(1, 2, 4); 
+
+
 void setup(){
   Serial.begin(115200);
 
@@ -23,10 +28,10 @@ void setup(){
   digitalWrite(ms2, HIGH);
   digitalWrite(ms3, HIGH);
     
-  // Change these to suit your stepper if you want
+// Initial stepper movement parameters
   stepper.setMaxSpeed(5000); //steps per second
   stepper.setAcceleration(3000); //steps per second square
-  stepper.moveTo(800);
+  stepper.moveTo(800); //number of steps
 }
 
 void loop()
@@ -39,25 +44,43 @@ runSwing();
 void checkSerial(){
   if (Serial.available() > 0) {
     command = Serial.read();
-    newData = true;}
+    newData = true;
+    }
+    
   if (newData == true) {
+    
     if (command == 's') {
       runAllowed = true;
-      Serial.println("Command recieved");
       }
+      
     if (command == 'n') {
        runAllowed = false;
        stepper.stop();
        }
+       
     if (command == 'a') {
-        runAllowed = false;
+       runAllowed = false;
 
-        acceleration = Serial.parseFloat();
+       inAcceleration = Serial.parseFloat();
 
-        stepper.setAcceleration(acceleration);
-      
+       stepper.setAcceleration(acceleration);
       }
+     
+   if (command == 'v') {
+      runAllowed = false;
+      
+      inMaxSpeed = Serial.parseFloat();
+
+      stepper.setMaxSpeed(inMaxSpeed);
      }
+   if (command == 'd') {
+      runAllowed = false;
+
+      inDistance = Serial.parseFloat();
+
+      stepper.moveTo(inDistance);
+    }
+  }
 }
 
 void runSwing(){
