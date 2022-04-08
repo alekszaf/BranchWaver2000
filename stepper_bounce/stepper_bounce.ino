@@ -71,5 +71,8 @@ void checkSerial(){
     if (recCommand == 'n') {
       runallowed = false;
       Serial.println("STOP");
-      stepper.stop();}
+      stepper.stop();
+      stepper.setMaxSpeed(0);
+      stepper.move(0);
+      delay(10);}
   }}
