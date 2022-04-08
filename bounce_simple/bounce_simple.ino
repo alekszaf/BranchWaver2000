@@ -1,12 +1,17 @@
 #include <AccelStepper.h>
+char command;
 
 const int ms1 = 5;
 const int ms2 = 18;
 const int ms3 = 19;
 
+bool newData = false;
+bool runAllowed = false;
+
 // Define a stepper and the pins it will use
 AccelStepper stepper(1, 2, 4); // Defaults to AccelStepper::FULL4WIRE (4 pins) on 2, 3, 4, 5
 void setup(){
+  Serial.begin(115200);
 
 //Microstepping
   pinMode(ms1, OUTPUT);
@@ -21,14 +26,32 @@ void setup(){
   stepper.setAcceleration(2000); //steps per second square
   stepper.moveTo(500);
 }
+
 void loop()
 {
-   
- for (int i=0; i <= 5; i++) {
+checkSerial();
+//delay(10);
+runSwing();
+
+}
+
+void checkSerial(){
+  if (Serial.available() > 0) {
+    command = Serial.read();
+    newData = true;}
+  if (newData == true) {
+    if (command == 's') {
+      runAllowed = true;
+      Serial.println("Command recieved");
+      }
+     }
+}
+
+void runSwing(){
+  if (runAllowed == true){
     if (stepper.distanceToGo() == 0)
-      stepper.moveTo(-stepper.currentPosition());         // If at the end of travel go to the other end
+      stepper.moveTo(-stepper.currentPosition());
+      
       stepper.run();
-//      if (i == 5) {
-//        stepper.moveTo(0);}
-        }
+    }
 }
