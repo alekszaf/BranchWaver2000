@@ -1,8 +1,8 @@
 #include <AccelStepper.h>
-char command;
-long inAcceleration;
-long inMaxSpeed
-long inDistance
+char inpCommand;
+long inpAcceleration;
+long inpMaxSpeed;
+long inpDistance;
 
 // Initialize pins for microstepping
 const int ms1 = 5;
@@ -43,42 +43,40 @@ runSwing();
 
 void checkSerial(){
   if (Serial.available() > 0) {
-    command = Serial.read();
+    inpCommand = Serial.read();
     newData = true;
     }
     
   if (newData == true) {
     
-    if (command == 's') {
+    if (inpCommand == 's') {
       runAllowed = true;
       }
       
-    if (command == 'n') {
+    if (inpCommand == 'n') {
+       stepper.moveTo(0);       
        runAllowed = false;
        stepper.stop();
        }
        
-    if (command == 'a') {
-       runAllowed = false;
+    if (inpCommand == 'a') {
 
-       inAcceleration = Serial.parseFloat();
+       inpAcceleration = Serial.parseFloat();
 
-       stepper.setAcceleration(acceleration);
+       stepper.setAcceleration(inpAcceleration);
       }
      
-   if (command == 'v') {
-      runAllowed = false;
-      
-      inMaxSpeed = Serial.parseFloat();
+   if (inpCommand == 'v') {
 
-      stepper.setMaxSpeed(inMaxSpeed);
+      inpMaxSpeed = Serial.parseFloat();
+
+      stepper.setMaxSpeed(inpMaxSpeed);
      }
-   if (command == 'd') {
-      runAllowed = false;
+   if (inpCommand == 'd') {
+    
+      inpDistance = Serial.parseFloat();
 
-      inDistance = Serial.parseFloat();
-
-      stepper.moveTo(inDistance);
+      stepper.moveTo(inpDistance);
     }
   }
 }
