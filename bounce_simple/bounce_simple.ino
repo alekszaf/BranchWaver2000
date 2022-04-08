@@ -4,6 +4,8 @@ long inpAcceleration;
 long inpMaxSpeed;
 long inpDistance;
 
+int stoppingPos;
+
 // Initialize pins for microstepping
 const int ms1 = 5;
 const int ms2 = 18;
@@ -54,8 +56,8 @@ void checkSerial(){
       }
       
     if (inpCommand == 'n') {
-       stepper.moveTo(0);       
-       runAllowed = false;
+      
+       runAllowed = false;    
        stepper.stop();
        }
        
