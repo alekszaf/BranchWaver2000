@@ -28,6 +28,8 @@ AccelStepper stepper(1, 2, 4);
 void setup(){
   Serial.begin(115200);
 
+  Serial.println("Testing Accelstepper");
+  
 //Microstepping
   pinMode(ms1, OUTPUT);
   pinMode(ms2, OUTPUT);
@@ -90,7 +92,9 @@ void checkSerial(){
 }
 
 void runSwing(){
+  
   if (runAllowed == true){
+    
     if (stepper.distanceToGo() == 0)
       stepper.moveTo(-stepper.currentPosition());
       
