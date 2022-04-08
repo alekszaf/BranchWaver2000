@@ -40,12 +40,15 @@ void loop() {
   checkSerial();
   runSwing();
   
-  if (stepper.distanceToGo() == 0)
+}
+
+void runSwing(){
+  if (runallowed == true){
+    if (stepper.distanceToGo() == 0)
     stepper.moveTo(-stepper.currentPosition());
 
-   stepper.run();
-
-}
+    stepper.run();}
+  }
 
 void checkSerial(){
   if (Serial.available() > 0) {
@@ -64,5 +67,9 @@ void checkSerial(){
 
       stepper.setMaxSpeed(recSpeed);
       stepper.move(recDist);}
-      }
-  }
+      
+    if (recCommand == 'n') {
+      runallowed = false;
+      Serial.println("STOP");
+      stepper.stop();}
+  }}
