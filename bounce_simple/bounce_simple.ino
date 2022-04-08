@@ -1,5 +1,7 @@
 #include <AccelStepper.h>
 char command;
+long acceleration;
+
 
 const int ms1 = 5;
 const int ms2 = 18;
@@ -22,15 +24,14 @@ void setup(){
   digitalWrite(ms3, HIGH);
     
   // Change these to suit your stepper if you want
-  stepper.setMaxSpeed(1000); //steps per second
-  stepper.setAcceleration(2000); //steps per second square
-  stepper.moveTo(500);
+  stepper.setMaxSpeed(5000); //steps per second
+  stepper.setAcceleration(3000); //steps per second square
+  stepper.moveTo(800);
 }
 
 void loop()
 {
 checkSerial();
-//delay(10);
 runSwing();
 
 }
@@ -43,6 +44,18 @@ void checkSerial(){
     if (command == 's') {
       runAllowed = true;
       Serial.println("Command recieved");
+      }
+    if (command == 'n') {
+       runAllowed = false;
+       stepper.stop();
+       }
+    if (command == 'a') {
+        runAllowed = false;
+
+        acceleration = Serial.parseFloat();
+
+        stepper.setAcceleration(acceleration);
+      
       }
      }
 }
