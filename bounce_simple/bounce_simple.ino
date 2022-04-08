@@ -1,10 +1,17 @@
-#include <AccelStepper.h>
-char inpCommand;
-long inpAcceleration;
-long inpMaxSpeed;
-long inpDistance;
+//Welcome to BranchWaver2000
+//Type 's' to begin
+//You can modify the movement with the following commands:
+//'a' - set the acceleration value (steps per second square) e.g. a2000
+//'v' - set the maximum speed (steps per second) e.g. v3000
+//'d' - set the swing range (steps in one direction, full swing is x2), e.g. d300
+//Type 'n' to stop the movement.
 
-int stoppingPos;
+
+#include <AccelStepper.h>
+char inputCommand;
+long inputAcceleration;
+long inputMaxSpeed;
+long inputDistance;
 
 // Initialize pins for microstepping
 const int ms1 = 5;
@@ -17,7 +24,6 @@ bool runAllowed = false;
 
 // Define a stepper and the pins it will use
 AccelStepper stepper(1, 2, 4); 
-
 
 void setup(){
   Serial.begin(115200);
@@ -45,40 +51,40 @@ runSwing();
 
 void checkSerial(){
   if (Serial.available() > 0) {
-    inpCommand = Serial.read();
+    inputCommand = Serial.read();
     newData = true;
     }
     
   if (newData == true) {
     
-    if (inpCommand == 's') {
+    if (inputCommand == 's') {
       runAllowed = true;
       }
       
-    if (inpCommand == 'n') {
+    if (inputCommand == 'n') {
       
        runAllowed = false;    
        stepper.stop();
        }
        
-    if (inpCommand == 'a') {
+    if (inputCommand == 'a') {
 
-       inpAcceleration = Serial.parseFloat();
+       inputAcceleration = Serial.parseFloat();
 
-       stepper.setAcceleration(inpAcceleration);
+       stepper.setAcceleration(inputAcceleration);
       }
      
-   if (inpCommand == 'v') {
+   if (inputCommand == 'v') {
 
-      inpMaxSpeed = Serial.parseFloat();
+      inputMaxSpeed = Serial.parseFloat();
 
-      stepper.setMaxSpeed(inpMaxSpeed);
+      stepper.setMaxSpeed(inputMaxSpeed);
      }
-   if (inpCommand == 'd') {
+   if (inputCommand == 'd') {
     
-      inpDistance = Serial.parseFloat();
+      inputDistance = Serial.parseFloat();
 
-      stepper.moveTo(inpDistance);
+      stepper.moveTo(inputDistance);
     }
   }
 }
