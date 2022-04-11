@@ -11,7 +11,7 @@
 char inputCommand;
 long inputAcceleration;
 long inputMaxSpeed;
-long inputDistance;
+long inputAngle;
 
 // Initialize pins for microstepping
 const int ms1 = 5;
@@ -27,8 +27,6 @@ AccelStepper stepper(1, 2, 4);
 
 void setup(){
   Serial.begin(115200);
-
-  Serial.println("Testing Accelstepper");
   
 //Microstepping
   pinMode(ms1, OUTPUT);
@@ -39,7 +37,7 @@ void setup(){
   digitalWrite(ms3, HIGH);
     
 // Initial stepper movement parameters
-  stepper.setMaxSpeed(5000); //steps per second
+  stepper.setMaxSpeed(2000); //steps per second
   stepper.setAcceleration(3000); //steps per second square
   stepper.moveTo(800); //number of steps
 }
@@ -48,6 +46,7 @@ void loop()
 {
 checkSerial();
 runSwing();
+//Serial.println(stepper.speed());
 
 }
 
@@ -84,7 +83,7 @@ void checkSerial(){
      }
    if (inputCommand == 'd') {
     
-      inputDistance = Serial.parseFloat();
+      inputAngle = Serial.parseFloat();
 
       stepper.moveTo(inputDistance);
     }
