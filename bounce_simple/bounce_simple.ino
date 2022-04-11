@@ -12,6 +12,7 @@ char inputCommand;
 long inputAcceleration;
 long inputMaxSpeed;
 long inputAngle;
+long inputSteps;
 
 // Initialize pins for microstepping
 const int ms1 = 5;
@@ -85,7 +86,9 @@ void checkSerial(){
     
       inputAngle = Serial.parseFloat();
 
-      stepper.moveTo(inputDistance);
+      inputSteps = inputAngle * 8.8889;
+
+      stepper.moveTo(inputSteps);
     }
   }
 }
