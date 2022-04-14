@@ -18,20 +18,28 @@ long currentSpeed;
 
 
 // Initialize pins for microstepping
-const int ms1 = 5;
-const int ms2 = 18;
-const int ms3 = 19;
+const int ms1 = 7;
+const int ms2 = 8;
+const int ms3 = 9;
+
+// Enable pin
+const int enbl = 10;
+
 
 // Flags
 bool newData = false;      
 bool runAllowed = false;
 
 // Define a stepper and the pins it will use
-AccelStepper stepper(1, 2, 4); 
+AccelStepper stepper(1, 4, 3); 
 
 void setup(){
   Serial.begin(115200);
-  
+
+// Enable
+  stepper.setEnablePin(enbl);
+  stepper.setPinsInverted(false, false, true);
+
 //Microstepping
   pinMode(ms1, OUTPUT);
   pinMode(ms2, OUTPUT);
@@ -39,11 +47,13 @@ void setup(){
   digitalWrite(ms1, HIGH); // 1, 1, 1 -> 1/16
   digitalWrite(ms2, HIGH);
   digitalWrite(ms3, HIGH);
-    
+
 // Initial stepper movement parameters
   stepper.setMaxSpeed(6000); //steps per second
   stepper.setAcceleration(5000); //steps per second square
   stepper.moveTo(800); //number of steps
+
+//  stepper.enableOutputs();
 }
 
 void loop()
@@ -61,13 +71,17 @@ void checkSerial(){
   if (newData == true) {
     
     if (inputCommand == 's') {
+      
       runAllowed = true;
       }
       
     if (inputCommand == 'n') {
       
-       runAllowed = false;    
+       runAllowed = false; 
+          
        stepper.stop();
+       
+       stepper.disableOutputs();
        }
        
     if (inputCommand == 'a') {
@@ -103,6 +117,8 @@ void checkSerial(){
 void runSwing(){
   
   if (runAllowed == true){
+    
+    stepper.enableOutputs();
     
     if (stepper.distanceToGo() == 0)
       stepper.moveTo(-stepper.currentPosition());
