@@ -13,6 +13,9 @@ long inputAcceleration;
 long inputMaxSpeed;
 long inputAngle;
 long inputSteps;
+long currentPos;
+long currentSpeed;
+
 
 // Initialize pins for microstepping
 const int ms1 = 5;
@@ -38,8 +41,8 @@ void setup(){
   digitalWrite(ms3, HIGH);
     
 // Initial stepper movement parameters
-  stepper.setMaxSpeed(2000); //steps per second
-  stepper.setAcceleration(3000); //steps per second square
+  stepper.setMaxSpeed(6000); //steps per second
+  stepper.setAcceleration(5000); //steps per second square
   stepper.moveTo(800); //number of steps
 }
 
@@ -47,8 +50,6 @@ void loop()
 {
 checkSerial();
 runSwing();
-//Serial.println(stepper.speed());
-
 }
 
 void checkSerial(){
@@ -74,6 +75,8 @@ void checkSerial(){
        inputAcceleration = Serial.parseFloat();
 
        stepper.setAcceleration(inputAcceleration);
+
+       Serial.println("New acceleration: " + String(inputAcceleration));
       }
      
    if (inputCommand == 'v') {
@@ -81,14 +84,18 @@ void checkSerial(){
       inputMaxSpeed = Serial.parseFloat();
 
       stepper.setMaxSpeed(inputMaxSpeed);
+
+      Serial.println("New speed: " + String(inputMaxSpeed));
      }
    if (inputCommand == 'd') {
     
       inputAngle = Serial.parseFloat();
 
-      inputSteps = inputAngle * 8.8889;
+      inputSteps = inputAngle*8.8889;
 
       stepper.moveTo(inputSteps);
+
+      Serial.println("New angle: " + String(inputAngle));
     }
   }
 }
@@ -102,4 +109,4 @@ void runSwing(){
       
       stepper.run();
     }
-}
+} 
