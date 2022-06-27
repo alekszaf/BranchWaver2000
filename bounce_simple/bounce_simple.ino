@@ -49,11 +49,10 @@ void setup(){
   digitalWrite(ms3, HIGH);
 
 // Initial stepper movement parameters
-  stepper.setMaxSpeed(6000); //steps per second
-  stepper.setAcceleration(5000); //steps per second square
-  stepper.moveTo(800); //number of steps
+  stepper.setMaxSpeed(500); //steps per second
+  stepper.setAcceleration(1000); //steps per second square
+  stepper.moveTo(533); //number of steps
 
-//  stepper.enableOutputs();
 }
 
 void loop()
